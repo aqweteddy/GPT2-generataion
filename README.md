@@ -1,8 +1,7 @@
 # README
 
-## Pretrain model
-
-* CKIP Lab GPT2-base
+* based on `pytorch` / `transformers` and `pytorch_lightning`
+* pretrained model: CKIP Lab GPT2-base
 
 ## fine-tune
 
