@@ -1,0 +1,177 @@
+absl-py==0.9.0
+aiohttp==3.6.2
+aniso8601==8.0.0
+argon2-cffi==20.1.0
+astor==0.8.1
+astroid==2.4.2
+astunparse==1.6.3
+async-generator==1.10
+async-timeout==3.0.1
+attrs==19.3.0
+autopep8==1.5.4
+backcall==0.2.0
+bleach==3.2.1
+blessed==1.17.9
+boto==2.49.0
+boto3==1.14.33
+botocore==1.17.33
+brotlipy==0.7.0
+cachetools==4.1.1
+certifi==2020.6.20
+cffi @ file:///tmp/build/80754af9/cffi_1605538037615/work
+chardet @ file:///tmp/build/80754af9/chardet_1605303159953/work
+ckiptagger==0.2.1
+click==7.1.2
+comet-ml==3.2.5
+configobj==5.0.6
+cryptography @ file:///tmp/build/80754af9/cryptography_1605544449973/work
+decorator==4.4.2
+defusedxml==0.6.0
+docutils==0.15.2
+dulwich==0.20.11
+elmoformanylangs==0.0.3
+entrypoints==0.3
+everett==1.0.3
+filelock==3.0.12
+Flask==1.1.2
+Flask-RESTful==0.3.8
+fsspec==0.8.5
+future==0.18.2
+gaisTokenizer==0.2
+gast==0.3.3
+gdown==3.12.0
+gensim==3.8.3
+google-auth==1.20.0
+google-auth-oauthlib==0.4.1
+google-pasta==0.2.0
+gpustat @ git+https://github.com/wookayin/gpustat.git@aba85f8eba9f7861022eb3dcc06ff771b451b3e1
+grpcio==1.30.0
+gunicorn==20.0.4
+h5py==2.10.0
+idna @ file:///tmp/build/80754af9/idna_1593446292537/work
+importlib-metadata==1.7.0
+install==1.3.3
+ipykernel @ file:///tmp/build/80754af9/ipykernel_1596206598566/work/dist/ipykernel-5.3.4-py3-none-any.whl
+ipython @ file:///tmp/build/80754af9/ipython_1604101195213/work
+ipython-genutils==0.2.0
+ipywidgets==7.5.1
+isort==4.3.21
+itsdangerous==1.1.0
+jedi @ file:///tmp/build/80754af9/jedi_1596490743326/work
+jellyfish==0.8.2
+Jinja2==2.11.2
+jmespath==0.10.0
+joblib==0.16.0
+jsonschema==3.2.0
+jupyter==1.0.0
+jupyter-client @ file:///tmp/build/80754af9/jupyter_client_1601311786391/work
+jupyter-console==6.2.0
+jupyter-core==4.6.3
+jupyterlab-pygments==0.1.2
+Keras-Applications==1.0.8
+Keras-Preprocessing==1.1.2
+lazy-object-proxy==1.4.3
+Markdown==3.2.2
+MarkupSafe==1.1.1
+mccabe==0.6.1
+mistune==0.8.4
+mkl-fft==1.0.15
+mkl-random==1.1.1
+mkl-service==2.3.0
+multidict==4.7.6
+nbclient==0.5.1
+nbconvert==6.0.7
+nbformat==5.0.8
+nest-asyncio==1.4.3
+netifaces==0.10.9
+networkx==2.5
+nltk==3.5
+notebook==6.1.5
+numpy==1.18.5
+nvidia-ml-py3==7.352.0
+oauthlib==3.1.0
+olefile==0.46
+opt-einsum==3.3.0
+orjson==3.3.0
+overrides==3.1.0
+packaging==20.4
+pandas==1.1.0
+pandocfilters==1.4.3
+parso==0.7.1
+pexpect @ file:///tmp/build/80754af9/pexpect_1594383317248/work
+pickleshare @ file:///tmp/build/80754af9/pickleshare_1594384075987/work
+Pillow==7.2.0
+prometheus-client==0.9.0
+prompt-toolkit @ file:///tmp/build/80754af9/prompt-toolkit_1602688806899/work
+protobuf==3.13.0
+psutil==5.7.2
+ptyprocess @ file:///tmp/build/80754af9/ptyprocess_1605560620615/work/dist/ptyprocess-0.6.0-py2.py3-none-any.whl
+py==1.9.0
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
+pycodestyle==2.6.0
+pycparser @ file:///tmp/build/80754af9/pycparser_1594388511720/work
+Pygments @ file:///tmp/build/80754af9/pygments_1604103097372/work
+pylint==2.5.3
+pymongo==3.11.0
+pyOpenSSL @ file:///tmp/build/80754af9/pyopenssl_1605545627475/work
+pyparsing==2.4.7
+pyrsistent==0.17.3
+PySocks @ file:///tmp/build/80754af9/pysocks_1594394576006/work
+python-dateutil==2.8.1
+pytorch-lightning==1.1.3
+pytorch-nlp==0.5.0
+pytorch-ranger==0.1.1
+pytz==2020.1
+PyYAML==5.3.1
+pyzmq==19.0.2
+qtconsole==4.7.7
+QtPy==1.9.0
+regex==2020.7.14
+requests @ file:///tmp/build/80754af9/requests_1592841827918/work
+requests-oauthlib==1.3.0
+rsa==4.6
+s3transfer==0.3.3
+sacremoses==0.0.43
+scikit-learn==0.23.1
+scipy==1.4.1
+segtok==1.5.10
+Send2Trash==1.5.0
+sentencepiece==0.1.91
+shuffle==0.9
+six==1.15.0
+sklearn==0.0
+smart-open==2.1.0
+stanfordcorenlp==3.9.1.1
+stanza==1.1.1
+tabulate==0.8.7
+tensorboard==2.3.0
+tensorboard-plugin-wit==1.7.0
+tensorboardX==2.1
+tensorflow-estimator==2.3.0
+tensorflow-gpu==2.3.0
+termcolor==1.1.0
+terminado==0.9.1
+testpath==0.4.4
+threadpoolctl==2.1.0
+tokenizers==0.8.1
+toml==0.10.1
+torch==1.6.0
+torchvision==0.7.0
+tornado==6.0.4
+tqdm @ file:///tmp/build/80754af9/tqdm_1605303662894/work
+traitlets @ file:///tmp/build/80754af9/traitlets_1602787416690/work
+transformers==3.0.2
+typed-ast==1.4.1
+typing-extensions==3.7.4.2
+urllib3 @ file:///tmp/build/80754af9/urllib3_1603305693037/work
+wcwidth @ file:///tmp/build/80754af9/wcwidth_1593447189090/work
+webencodings==0.5.1
+websocket-client==0.57.0
+Werkzeug==1.0.1
+widgetsnbextension==3.5.1
+wrapt==1.12.1
+wurlitzer==2.0.1
+yake @ git+https://github.com/LIAAD/yake@2c9fedbe0e3195a273a3c3daef3d41d4d7c5b3b3
+yarl==1.5.1
+zipp==3.1.0
