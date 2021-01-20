@@ -12,17 +12,21 @@ class BERT2BERTTrainer(pl.LightningModule):
         encoder = BertGenerationEncoder.from_pretrained("ckiplab/bert-base-chinese",
                                                         bos_token_id=101,
                                                         eos_token_id=102)
+        # encoder.to('cuda')
         decoder = BertGenerationDecoder.from_pretrained("ckiplab/bert-base-chinese",
                                                         add_cross_attention=True,
                                                         is_decoder=True,
                                                         bos_token_id=101,
                                                         eos_token_id=102)
+
         self.bert2bert = EncoderDecoderModel(encoder=encoder, decoder=decoder)
 
-    def generate(self, inputs_ids, **kwargs):
+    def generate(self, inputs_ids, attention_mask, **kwargs):
         inputs_ids = inputs_ids.to(self.device)
+        attention_mask = attention_mask.to(self.device)
         with torch.no_grad():
             return self.bert2bert.generate(input_ids=inputs_ids,
+                                           attention_mask=attention_mask,
                                            bos_token_id=101,
                                            min_length=200,
                                            eos_token_id=102,
@@ -36,12 +40,14 @@ class BERT2BERTTrainer(pl.LightningModule):
     def training_step(self, inputs, batch_idx):
         title, body = inputs
         loss = self.bert2bert(input_ids=title['input_ids'].squeeze(1),
-                              attention_mask=title['attention_mask'].squeeze(1),
+                              attention_mask=title['attention_mask'].squeeze(
+                                  1),
                               decoder_input_ids=body['input_ids'].squeeze(1),
-                              decoder_attention_mask=body['attention_mask'].squeeze(1),
+                              decoder_attention_mask=body['attention_mask'].squeeze(
+                                  1),
                               labels=body['input_ids'].squeeze(1)
                               ).loss
-    
+
         return {'loss': loss}
 
     def training_epoch_end(self, outputs):

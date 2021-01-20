@@ -7,7 +7,6 @@ import os, time
 
 class Generator:
     def __init__(self, ckpt, model_type, device='cuda'):
-        #TODO: bert2bert
         self.model_type = model_type
         if model_type == 'gpt2':
             self.model = GPT2Trainer.load_from_checkpoint(ckpt).to(device)
@@ -21,13 +20,13 @@ class Generator:
         inputs = encoded_input['input_ids'][:, :-1]
         attn_mask = encoded_input['attention_mask'][:, :-1]
         result_idx = self.model.generate(inputs,
-                                         attention_mask=attn_mask,
+                                         attn_mask,
                                          max_length=maxlen,
                                          num_beams=10,
                                          num_return_sequences=num_seq,
                                          repetition_penalty=1.3,
-                                         num_beam_groups=num_seq,
-                                         diversity_penalty=1.3,
+                                        #  num_beam_groups=num_seq,
+                                        #  diversity_penalty=1.3,
                                          do_sample=True,
                                          no_repeat_ngram_size=5,
                                          **kwargs
@@ -47,12 +46,14 @@ if __name__ == '__main__':
     parser.add_argument('--num_seq', type=int, default=1)
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--to', type=str, default='result.txt')
-    parser.add_argument('--gpu', type=str, default='1')
+    parser.add_argument('--gpu', type=str, default='0')
+    parser.add_argument('--model_type', type=str, default='gpt2')
+
 
     args = parser.parse_args()
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
-    generator = Generator(args.ckpt, args.device)
+    generator = Generator(args.ckpt,  args.model_type, args.device)
 
     start = time.time()
     result = generator.geneate(args.prompt, args.maxlen, args.num_seq)
