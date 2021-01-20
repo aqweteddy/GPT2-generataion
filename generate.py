@@ -25,6 +25,7 @@ class Generator:
                                          num_beams=10,
                                          num_return_sequences=num_seq,
                                          repetition_penalty=1.3,
+                                         temperature=1.2,
                                         #  num_beam_groups=num_seq,
                                         #  diversity_penalty=1.3,
                                          do_sample=True,
@@ -46,7 +47,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_seq', type=int, default=1)
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--to', type=str, default='result.txt')
-    parser.add_argument('--gpu', type=str, default='1')
+    parser.add_argument('--gpu', type=str, default='0')
     parser.add_argument('--model_type', type=str, default='gpt2')
 
 

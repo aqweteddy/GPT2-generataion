@@ -9,11 +9,11 @@ class BERT2BERTTrainer(pl.LightningModule):
         super(BERT2BERTTrainer, self).__init__()
         self.save_hyperparameters()
 
-        encoder = BertGenerationEncoder.from_pretrained("ckiplab/bert-base-chinese",
+        encoder = BertGenerationEncoder.from_pretrained("ckiplab/albert-base-chinese",
                                                         bos_token_id=101,
                                                         eos_token_id=102)
         # encoder.to('cuda')
-        decoder = BertGenerationDecoder.from_pretrained("ckiplab/bert-base-chinese",
+        decoder = BertGenerationDecoder.from_pretrained("ckiplab/albert-base-chinese",
                                                         add_cross_attention=True,
                                                         is_decoder=True,
                                                         bos_token_id=101,
