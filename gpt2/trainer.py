@@ -16,7 +16,7 @@ class GPT2Trainer(pl.LightningModule):
         with torch.no_grad():
             return self.gpt2.generate(input_ids=inputs_ids, bos_token_id=101,
                                       min_length=200, eos_token_id=102,
-                                      pad_token_id=0, no_repeat_ngram_size=3,
+                                      pad_token_id=0, 
                                       **kwargs).detach().cpu().tolist()
 
     def forward(self, inputs):

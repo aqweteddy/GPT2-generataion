@@ -2,39 +2,17 @@ import pytorch_lightning as pl
 from torch.utils import data
 from transformers import BertTokenizerFast
 import json
-
-
-class NewsDataset(data.Dataset):
-    def __init__(self, file, length=500) -> None:
-        self.recs = self.load_file(file)
-        self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-chinese')
-        self.length = length
-
-    def __len__(self) -> int:
-        return len(self.recs)
-
-    @staticmethod
-    def load_file(file):
-        with open(file) as f:
-            data = json.load(f)
-        return [d['title'] + ' ' + d['body'] for d in data]
-        # return [d['body'] for d in data]
-
-    def __getitem__(self, index: int):
-        sent = self.recs[index]
-        sent = sent.replace(' ', '')
-        sent_dct = self.tokenizer(sent, return_tensors='pt',
-                                  max_length=self.length,
-                                  padding='max_length',
-                                  truncation=True)
-        # print(sent_dct)
-        return (sent_dct['input_ids'], sent_dct['token_type_ids'], sent_dct['attention_mask'])
+from gpt2 import GPT2NewsDataset
+from bert2bert import BERT2BERTNewsDataset
 
 
 class NewsDataModule(pl.LightningDataModule):
-    def __init__(self, args):
+    def __init__(self, args, model_type: str):
         super(NewsDataModule, self).__init__()
-        self.ds = NewsDataset(args.train_data, args.max_len)
+        if model_type == 'gpt2':
+            self.ds = GPT2NewsDataset(args.train_data, args.max_len)
+        elif model_type == 'bert2bert':
+            self.ds = BERT2BERTNewsDataset(args.train_data, args.max_len)
         self.args = args
 
     def train_dataloader(self):
@@ -56,7 +34,8 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser = NewsDataModule.add_parser_args(parser)
-    dm = NewsDataModule(parser.parse_args())
+    dm = NewsDataModule(parser.parse_args(), 'bert2bert')
     for d in tqdm(dm.train_dataloader()):
         print(d[0])
+        print(d[1])
         break
