@@ -6,7 +6,7 @@ import json
 class BERT2BERTNewsDataset(data.Dataset):
     def __init__(self, train_data, title_maxlen, maxlen):
         self.titles, self.bodies = self.load_file(train_data)
-        self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-chinese')
+        self.tokenizer = BertTokenizerFast.from_pretrained('ckiplab/albert-base-chinese')
         self.body_length = maxlen
         self.title_length = title_maxlen
 
@@ -24,7 +24,8 @@ class BERT2BERTNewsDataset(data.Dataset):
         body = self.bodies[index]
         title = title.replace('/', '')
         # title = title.replace('/', '')
-        
+        if '】' in body:
+            body = body[body.index('】'):]
         title_idx = self.tokenizer(title, return_tensors='pt',
                                   max_length=self.title_length,
                                   padding='max_length',

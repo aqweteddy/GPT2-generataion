@@ -46,7 +46,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_seq', type=int, default=1)
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--to', type=str, default='result.txt')
-    parser.add_argument('--gpu', type=str, default='0')
+    parser.add_argument('--gpu', type=str, default='1')
     parser.add_argument('--model_type', type=str, default='gpt2')
 
 

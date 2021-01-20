@@ -2,6 +2,17 @@
 
 * based on `pytorch` / `transformers` and `pytorch_lightning`
 
+## train data description
+
+* json
+```json
+[
+    {"title": "xxxx", "body": "xxxxx"},
+    {"title": "xxxx", "body": "xxxxx"}
+    ...
+]
+```
+
 ## GPT2
 
 * pretrained model: CKIP Lab GPT2-base
