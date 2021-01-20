@@ -1,5 +1,6 @@
 from gpt2 import GPT2Trainer
-from transformers import BertTokenizerFast, GPT2LMHeadModel
+from bert2bert import BERT2BERTTrainer
+from transformers import BertTokenizerFast
 from argparse import ArgumentParser
 import os, time
 
@@ -10,6 +11,8 @@ class Generator:
         self.model_type = model_type
         if model_type == 'gpt2':
             self.model = GPT2Trainer.load_from_checkpoint(ckpt).to(device)
+        elif model_type == 'bert2bert':
+            self.model = BERT2BERTTrainer.load_from_checkpoint(ckpt).to(device)
         print(self.model.device)
         self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-chinese')
 

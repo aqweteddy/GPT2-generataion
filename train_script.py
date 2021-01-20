@@ -1,6 +1,7 @@
 import os
 from argparse import ArgumentParser
 from gpt2 import GPT2Trainer
+from bert2bert import BERT2BERTTrainer
 from data_module import NewsDataModule
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
@@ -22,8 +23,7 @@ train_dm = NewsDataModule(args, args.model_type)
 if args.model_type == 'gpt2':
     model = GPT2Trainer(**vars(args))
 elif args.model_type == 'bert2bert':
-    # TODO: fix bert 2 bert
-    model = GPT2Trainer(**vars(args))
+    model = BERT2BERTTrainer(**vars(args))
 
 trainer = pl.Trainer.from_argparse_args(args, callbacks=[checkpoint_callback])
 trainer.fit(model, train_dm)
