@@ -27,10 +27,10 @@ class GPT2Trainer(pl.LightningModule):
 
     def training_step(self, inputs, batch_idx):
         # inputs = {key: torch.stack(val) for key, val in inputs.items()}
-        outputs = self.gpt2(input_ids=inputs[0],
-                            token_type_ids=inputs[1],
-                            attention_mask=inputs[2],
-                            labels=inputs[0])
+        outputs = self.gpt2(input_ids=inputs[0].squeeze(1),
+                            token_type_ids=inputs[1].squeeze(1),
+                            attention_mask=inputs[2].squeeze(1),
+                            labels=inputs[0].squeeze(1))
         return {'loss': outputs[0]}
     
     def training_epoch_end(self, outputs):

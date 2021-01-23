@@ -20,7 +20,7 @@ class NewsDataModule(pl.LightningDataModule):
     @staticmethod
     def add_parser_args(parser):
         parser.add_argument('--train_data', type=str)
-        parser.add_argument('--max_len', type=int, default=500)
+        parser.add_argument('--max_len', type=int, default=350)
         parser.add_argument('--batch_size', type=int, default=8)
         parser.add_argument('--num_workers', type=int, default=10)
         # for bert2bert
@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser = NewsDataModule.add_parser_args(parser)
-    dm = NewsDataModule(parser.parse_args(), 'bert2bert')
+    dm = NewsDataModule(parser.parse_args(), 'gpt2')
     for d in tqdm(dm.train_dataloader()):
         print(d[0])
         print(d[1])

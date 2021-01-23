@@ -16,7 +16,10 @@ class GPT2NewsDataset(data.Dataset):
     def load_file(file):
         with open(file) as f:
             data = json.load(f)
-        return [d['title'] + ' ' + d['body'] for d in data]
+        body = []
+        for d in data:
+            body.extend(d['body'])
+        return body
         # return [d['body'] for d in data]
 
     def __getitem__(self, index: int):
@@ -32,3 +35,7 @@ class GPT2NewsDataset(data.Dataset):
         # print(sent_dct)
         return (sent_dct['input_ids'], sent_dct['token_type_ids'], sent_dct['attention_mask'])
 
+
+if __name__ == '__main__':
+    news_ds = GPT2NewsDataset('../data/pig/grey.json', 50)
+    print(news_ds[5])

@@ -25,7 +25,7 @@ class Generator:
                                          num_beams=10,
                                          num_return_sequences=num_seq,
                                          repetition_penalty=1.3,
-                                         temperature=1.2,
+                                         temperature=1.1,
                                         #  num_beam_groups=num_seq,
                                         #  diversity_penalty=1.3,
                                          do_sample=True,
