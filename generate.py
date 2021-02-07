@@ -1,8 +1,14 @@
-from gpt2 import GPT2Trainer
-from bert2bert import BERT2BERTTrainer
-from transformers import BertTokenizerFast
+import os
+import time, random
 from argparse import ArgumentParser
-import os, time
+from typing import Counter, List
+
+from tqdm import tqdm
+from transformers import BertTokenizerFast
+
+from bert2bert import BERT2BERTTrainer
+from gpt2 import GPT2Trainer
+from rag import RagTrainer
 
 
 class Generator:
@@ -10,24 +16,25 @@ class Generator:
         self.model_type = model_type
         if model_type == 'gpt2':
             self.model = GPT2Trainer.load_from_checkpoint(ckpt).to(device)
-        elif model_type == 'bert2bert':
+        elif 'bert2bert' in model_type:
             self.model = BERT2BERTTrainer.load_from_checkpoint(ckpt).to(device)
+        elif model_type == 'rag':
+            self.model = RagTrainer.load_from_checkpoint(ckpt).to(device)
         print(self.model.device)
+        self.model.eval()
         self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-chinese')
 
     def geneate(self, prompt, maxlen, num_seq, **kwargs):
-        encoded_input = self.tokenizer(prompt, return_tensors='pt')
-        inputs = encoded_input['input_ids'][:, :-1]
-        attn_mask = encoded_input['attention_mask'][:, :-1]
+        encoded_input = self.tokenizer(prompt, add_special_tokens=True, return_tensors='pt')
+        inputs = encoded_input['input_ids']
+        attn_mask = encoded_input['attention_mask']
         result_idx = self.model.generate(inputs,
                                          attn_mask,
                                          max_length=maxlen,
                                          num_beams=10,
                                          num_return_sequences=num_seq,
                                          repetition_penalty=1.3,
-                                         temperature=1.1,
-                                        #  num_beam_groups=num_seq,
-                                        #  diversity_penalty=1.3,
+                                         temperature=2.,
                                          do_sample=True,
                                          no_repeat_ngram_size=5,
                                          **kwargs
@@ -37,6 +44,29 @@ class Generator:
             result_idx, skip_special_tokens=True)
         result = [r.replace(' ', '') for r in result]
         return result
+
+def check_kw_in_sent(kws, sent:str):
+    tot_cnt = 0
+    for kw in kws.replace(' ', ''):
+        cnt = sent.count(kw)
+        tot_cnt += 0 if cnt == 1 else 1
+    return tot_cnt
+
+def generate_bert2bert_nsp(generator, prompt, maxlen, num_seq=3, num_para=3):
+    result = [prompt]
+    for i in tqdm(range(num_para)):
+        new_result = []
+        for r in result:
+            tmp: List[str] = generator.geneate(r, maxlen, num_seq if i != 0 else 10)
+            new_result.extend([r + ' ' + t for t in tmp])
+        if i == 0:
+            new_result = [r for r in new_result if check_kw_in_sent(prompt, r) >= 2]
+            print('\n'.join(new_result))
+        if len(new_result) != 0:
+            result = random.sample(new_result, min(len(new_result), num_seq))
+        else:
+            print('no keyword found!! re-generate.')
+    return result
 
 
 if __name__ == '__main__':
@@ -57,7 +87,10 @@ if __name__ == '__main__':
     generator = Generator(args.ckpt,  args.model_type, args.device)
 
     start = time.time()
-    result = generator.geneate(args.prompt, args.maxlen, args.num_seq)
+    if args.model_type == 'bert2bert_nsp':
+        result = generate_bert2bert_nsp(generator, args.prompt, args.maxlen, args.num_seq)
+    else:
+        result = generator.geneate(args.prompt, args.maxlen, args.num_seq)
     print(f'{time.time() - start:.3f}')
     with open(args.to, 'w') as f:
         f.writelines(['\n'.join(result)])

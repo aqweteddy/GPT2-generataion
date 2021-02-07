@@ -36,6 +36,7 @@ class GPT2Trainer(pl.LightningModule):
     def training_epoch_end(self, outputs):
         log = {'mean_loss': torch.stack([x['loss'] for x in outputs]).reshape(-1).mean() }
         self.log_dict(log, prog_bar=True)
+        
     def configure_optimizers(self):
         opt = optim.Adam(self.gpt2.parameters(), lr=self.hparams['lr'])
         return opt

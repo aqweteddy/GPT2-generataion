@@ -3,3 +3,5 @@ data/
 .*/
 *logs*/
 *.out
+rag_ckpt/
+kw2text/
