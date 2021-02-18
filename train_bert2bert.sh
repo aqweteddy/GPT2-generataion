@@ -1,1 +1,1 @@
-python train_script.py --model_type bert2bert_nsp --exp_name "all.json NSP(first paragraph keywords appear)" --train_data data/all.json --max_len 150 --title_max_len 400 --batch_size 16 --num_workers 20 --lr 2e-5 --gpus 1 --max_epochs 5 --save_top_k 6
+python train_script.py --model_type bert2bert --keywords_loss_fct mse --with_keywords_loss --keywords_loss_alpha 0.9 --exp_name "all.json (keyword loss) mse" --train_data data/all.json --max_len 200 --title_max_len 15 --batch_size 8 --num_workers 10 --lr 2e-5 --gpus 1 --max_epochs 5 --save_top_k 6

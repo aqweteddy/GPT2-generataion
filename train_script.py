@@ -12,7 +12,7 @@ from rag import RagTrainer
 from data_module import NewsDataModule
 
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 parser = ArgumentParser()
 parser.add_argument('--model_type', type=str, default='gpt2')
 parser.add_argument('--save_top_k', type=int, default=4)
@@ -20,6 +20,7 @@ parser.add_argument('--exp_name', type=str, default='exp1')
 
 parser = NewsDataModule.add_parser_args(parser)
 parser = GPT2Trainer.add_parser_args(parser)
+parser = BERT2BERTTrainer.add_parser_args(parser)
 parser = RagTrainer.add_parser_args(parser)
 parser = pl.Trainer.add_argparse_args(parser)
 args = parser.parse_args()

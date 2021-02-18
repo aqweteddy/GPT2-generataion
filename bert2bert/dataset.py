@@ -46,7 +46,7 @@ class BERT2BERTNewsDataset(data.Dataset):
         kws = list(filter(lambda x: True if sent2.find(x) != -1 else False, kws))
         if len(kws) > 3:
             kws = random.sample(kws, 3)
-        sent1 = ' '.join(kws)
+        sent1 = ','.join(kws)
         sent1_idx = self.tokenizer(sent1, return_tensors='pt',
                                   max_length=self.sent1_length,
                                   padding='max_length',
