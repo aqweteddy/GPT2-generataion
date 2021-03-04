@@ -3,6 +3,7 @@ from torch.utils import data
 from transformers import BertTokenizerFast
 import json, torch
 import random
+from tqdm import tqdm
 
 class BERT2BERTNewsDataset(data.Dataset):
     def __init__(self, train_data, sent1_maxlen, maxlen):
@@ -10,6 +11,7 @@ class BERT2BERTNewsDataset(data.Dataset):
         self.tokenizer = BertTokenizerFast.from_pretrained('ckiplab/bert-base-chinese')
         self.sent2_length = maxlen
         self.sent1_length = sent1_maxlen
+        print(f'data_len:{len(self.sent1s)}')
 
     def __len__(self) -> int:
         return len(self.sent1s)
@@ -17,36 +19,38 @@ class BERT2BERTNewsDataset(data.Dataset):
     @staticmethod
     def check_kw_in_sent(kws, sent):
         kws = kws.split(',')
-        tot_cnt = 0
-        for kw in kws:
-            cnt = sent.count(kw)
-            tot_cnt += min(cnt, 1)
-        return tot_cnt
-
+        result = [kw for kw in kws if kw in sent]
+        return result
 
     def load_file(self, file):
         with open(file) as f:
             data = json.load(f)
         sent2, sent1 = [], []
-        for d in data:
+        for d in tqdm(data):
+            # r = self.check_kw_in_sent(d['keywords'], d['title'])
+            # sent2.append(d['title'])
+            # sent2.append(''.join([char for char in d['title'] if not char.isdigit() and not char.isalpha() and char not in '. ,']))
+            # sent1.append(r)
             for b in d['body']:
-                if self.check_kw_in_sent(d['keywords'], b) > 1:
+                r = self.check_kw_in_sent(d['keywords'], b)
+                if len(r) > 1:
                     sent2.append(b)
-                    sent1.append(d['keywords'])
+                    sent1.append(r)
         return sent1, sent2
 
     def __getitem__(self, index: int):
         sent1 = self.sent1s[index]
         sent2 = self.sent2s[index]
-        kws = sent1.split(',')
+        # print(sent1, sent2)
+        # kws = sent1.split(',')
         #if len(kws) > 3:
         #    sent1 = ','.join(random.sample(sent1.split(','), 3))
         #else:
         #    sent1 = ','.join(kws)
-        kws = list(filter(lambda x: True if sent2.find(x) != -1 else False, kws))
-        if len(kws) > 3:
-            kws = random.sample(kws, 3)
-        sent1 = ','.join(kws)
+        # kws = list(filter(lambda x: True if sent2.find(x) != -1 else False, kws))
+        if len(sent1) > 4:
+            sent1 = random.sample(sent1, 3)
+        sent1 = ','.join(sent1)
         sent1_idx = self.tokenizer(sent1, return_tensors='pt',
                                   max_length=self.sent1_length,
                                   padding='max_length',

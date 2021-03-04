@@ -18,11 +18,11 @@ class KeywordsLoss(nn.Module):
             logits (torch.tensor): B, S2, V
             keywords (torch.tensor): B, S1
         """
-        #logits = nn.functional.gelu(logits)
+        logits = nn.functional.gelu(logits)
         logits = logits.mean(1)
         logits = torch.log_softmax(logits,  -1)
 
-        mask = (keywords != 101) & ( keywords != 102) & (keywords != 117) |( keywords == 120)
+        mask = (keywords != 101) & ( keywords != 102) & (keywords != 117) & ( keywords != 120)
         kws = keywords.detach().clone()
         kws[~mask] = 0
 

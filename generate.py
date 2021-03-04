@@ -25,18 +25,18 @@ class Generator:
         self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-chinese')
 
     def geneate(self, prompt, maxlen, num_seq, **kwargs):
-        encoded_input = self.tokenizer(prompt, add_special_tokens=True, return_tensors='pt')
+        encoded_input = self.tokenizer(prompt, add_special_tokens=False, return_tensors='pt')
         inputs = encoded_input['input_ids']
         attn_mask = encoded_input['attention_mask']
         result_idx = self.model.generate(inputs,
                                          attn_mask,
                                          max_length=maxlen,
-                                         num_beams=10,
+                                         num_beams=15,
                                          num_return_sequences=num_seq,
-                                         repetition_penalty=1.3,
-                                         temperature=2.,
+                                         repetition_penalty=1.5,
+                                         temperature=1.5,
                                          do_sample=True,
-                                         no_repeat_ngram_size=5,
+                                         no_repeat_ngram_size=4,
                                          **kwargs
                                          )
         

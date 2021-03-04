@@ -21,8 +21,8 @@ class NewsDataModule(pl.LightningDataModule):
     def train_dataloader(self):
         rs = data.sampler.RandomSampler(self.ds, replacement=True, num_samples=int(len(self.ds) * 0.5)) \
                 if self.model_type != 'bert2bert_nsp' else None
-        return data.DataLoader(self.ds, batch_size=self.args.batch_size, sampler=rs,
-                               num_workers=self.args.num_workers, pin_memory=False)
+        return data.DataLoader(self.ds, batch_size=self.args.batch_size, sampler=rs, drop_last=True,
+                               num_workers=self.args.num_workers)
 
     @staticmethod
     def add_parser_args(parser):    
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser = NewsDataModule.add_parser_args(parser)
-    dm = NewsDataModule(parser.parse_args(), 'bert2bert_nsp')
+    dm = NewsDataModule(parser.parse_args(), 'bert2bert')
     for d in tqdm(dm.train_dataloader()):
         print(d[0])
         print(d[1])
