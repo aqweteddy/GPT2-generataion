@@ -21,7 +21,7 @@ class BERT2BERTTrainer(pl.LightningModule):
 
         self.bert2bert = EncoderDecoderModel(encoder=encoder, decoder=decoder)
         if args['with_keywords_loss']:
-            self.loss_fct2 = KeywordsLoss(alpha=args['keywords_loss_alpha'])
+            self.loss_fct2 = KeywordsLoss(alpha=args['keywords_loss_alpha'], loss_fct=args['keywords_loss_fct'])
 
     def generate(self, inputs_ids, attention_mask=None, **kwargs):
         inputs_ids = inputs_ids.to(self.device)
