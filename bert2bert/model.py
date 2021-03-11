@@ -2,6 +2,7 @@ import torch.nn as nn
 import torch
 # from pytorch_lightning.metrics.utils import to_onehot
 
+
 class KeywordsLoss(nn.Module):
     def __init__(self, alpha=0.9, loss_fct='kldiv'):
         super().__init__()
@@ -23,7 +24,7 @@ class KeywordsLoss(nn.Module):
         logits[:,0] = 0
         logits = torch.log_softmax(logits,  -1)
 
-        mask = (keywords == 101) | ( keywords == 102) | (keywords == 117) | ( keywords == 120)
+        mask = (keywords == 101) | ( keywords == 102) | (keywords == 117) | ( keywords == 120) | (keywords == 0)
         kws = keywords.detach().clone()
         kws[mask] = 0
 

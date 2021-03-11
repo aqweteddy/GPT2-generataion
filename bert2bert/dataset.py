@@ -8,7 +8,7 @@ from tqdm import tqdm
 class BERT2BERTNewsDataset(data.Dataset):
     def __init__(self, train_data, sent1_maxlen, maxlen):
         self.sent1s, self.sent2s = self.load_file(train_data)
-        self.tokenizer = BertTokenizerFast.from_pretrained('ckiplab/bert-base-chinese')
+        self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-chinese')
         self.sent2_length = maxlen
         self.sent1_length = sent1_maxlen
         print(f'data_len:{len(self.sent1s)}')
@@ -33,9 +33,9 @@ class BERT2BERTNewsDataset(data.Dataset):
             # sent1.append(r)
             for b in d['body']:
                 r = self.check_kw_in_sent(d['keywords'], b)
-                if len(r) > 1:
-                    sent2.append(b)
-                    sent1.append(r)
+                # if len(r) > 1:
+                sent2.append(b)
+                sent1.append(r)
         return sent1, sent2
 
     def __getitem__(self, index: int):
@@ -51,10 +51,11 @@ class BERT2BERTNewsDataset(data.Dataset):
         if len(sent1) > 4:
             sent1 = random.sample(sent1, 3)
         sent1 = ','.join(sent1)
+        # print(sent1)
         sent1_idx = self.tokenizer(sent1, return_tensors='pt',
                                   max_length=self.sent1_length,
                                   padding='max_length',
-                                  add_special_tokens=False,
+                                  add_special_tokens=True,
                                   truncation=True)
         sent2_idx = self.tokenizer(sent2, return_tensors='pt',
                                   max_length=self.sent2_length,

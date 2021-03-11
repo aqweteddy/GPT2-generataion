@@ -21,7 +21,7 @@ class NewsDataModule(pl.LightningDataModule):
     def train_dataloader(self):
         rs = data.sampler.RandomSampler(self.ds, replacement=True, num_samples=int(len(self.ds) * 0.5)) \
                 if self.model_type != 'bert2bert_nsp' else None
-        return data.DataLoader(self.ds, batch_size=self.args.batch_size, sampler=rs, drop_last=True,
+        return data.DataLoader(self.ds, batch_size=self.args.batch_size, sampler=rs, drop_last=True, pin_memory=True,
                                num_workers=self.args.num_workers)
 
     @staticmethod
@@ -31,7 +31,7 @@ class NewsDataModule(pl.LightningDataModule):
         parser.add_argument('--batch_size', type=int, default=2)
         parser.add_argument('--num_workers', type=int, default=10)
         # for bert2bert
-        parser.add_argument('--title_max_len', type=int, default=450)
+        parser.add_argument('--title_max_len', type=int, default=15)
         return parser
 
 

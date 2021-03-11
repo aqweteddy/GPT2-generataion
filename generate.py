@@ -34,7 +34,7 @@ class Generator:
                                          num_beams=15,
                                          num_return_sequences=num_seq,
                                          repetition_penalty=1.5,
-                                         temperature=1.3,
+                                         temperature=1.5,
                                          do_sample=True,
                                          no_repeat_ngram_size=4,
                                          **kwargs
