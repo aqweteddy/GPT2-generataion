@@ -31,6 +31,7 @@ class GPT2Trainer(pl.LightningModule):
                             token_type_ids=inputs[1].squeeze(1),
                             attention_mask=inputs[2].squeeze(1),
                             labels=inputs[0].squeeze(1))
+        
         return {'loss': outputs[0]}
     
     def training_epoch_end(self, outputs):
