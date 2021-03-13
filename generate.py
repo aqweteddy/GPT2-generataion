@@ -2,7 +2,7 @@ import os
 import time
 import random
 from argparse import ArgumentParser
-from typing import Counter, List
+from typing import List
 import torch
 from tqdm import tqdm
 from transformers import BertTokenizerFast
@@ -48,7 +48,7 @@ class Generator:
                                          repetition_penalty=1.3,
                                          temperature=kwargs.pop('temperature', 1.5),
                                          do_sample=True,
-                                         no_repeat_ngram_size=5,
+                                         no_repeat_ngram_size=4,
                                          **kwargs
                                          )
 
