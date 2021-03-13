@@ -18,9 +18,8 @@ class GPT2NewsDataset(data.Dataset):
             data = json.load(f)
         body = []
         for d in data:
-            body.extend(d['body'])
+            body.extend(d['title'] + b for b in d['body'])
         return body
-        # return [d['body'] for d in data]
 
     def __getitem__(self, index: int):
         sent = self.recs[index]
