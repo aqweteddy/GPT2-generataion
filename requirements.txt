@@ -1,0 +1,9 @@
+comet-ml==3.2.5
+pytorch-lightning==1.1.7
+tokenizers==0.10.1
+toml==0.10.1
+torch==1.7.1
+torchtext==0.8.1
+torchvision==0.7.0
+tqdm
+transformers
