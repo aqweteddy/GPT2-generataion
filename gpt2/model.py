@@ -12,10 +12,8 @@ class GPT2LMHeadWithCalibration(GPT2LMHeadModel):
         """
 
         if not hasattr(self, 'first_adjust'):
-            print(logits.shape)
             logits = torch.softmax(logits, -1)
-            # logits = self.calibrate(logits)
-            logits[0, :] = self.calibrate(logits[0, :])
+            logits[-1, :] = self.calibrate(logits[-1, :])
             self.first_adjust = True
 
         return logits

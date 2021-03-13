@@ -18,7 +18,7 @@ class GPT2Trainer(pl.LightningModule):
         with torch.no_grad():
             return self.gpt2.generate(input_ids=inputs_ids, bos_token_id=101, attention_mask=attn_mask,
                                       min_length=200, eos_token_id=102,
-                                      pad_token_id=0, 
+                                      pad_token_id=0,
                                       **kwargs).detach().cpu().tolist()
 
     def forward(self, inputs):
@@ -31,13 +31,15 @@ class GPT2Trainer(pl.LightningModule):
                             token_type_ids=inputs[1].squeeze(1),
                             attention_mask=inputs[2].squeeze(1),
                             labels=inputs[0].squeeze(1))
-        
+
         return {'loss': outputs[0]}
-    
+
     def training_epoch_end(self, outputs):
-        log = {'mean_loss': torch.stack([x['loss'] for x in outputs]).reshape(-1).mean() }
+        log = {'mean_loss': torch.stack(
+            [x['loss'] for x in outputs]).reshape(-1).mean()}
         self.log_dict(log, prog_bar=True)
-        
+        self.gpt2.save_pretrained(f'gpt2_ckpt/epoch={self.current_epoch}')
+
     def configure_optimizers(self):
         opt = optim.Adam(self.gpt2.parameters(), lr=self.hparams['lr'])
         return opt

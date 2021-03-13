@@ -25,17 +25,16 @@ class GPT2NewsDataset(data.Dataset):
     def __getitem__(self, index: int):
         sent = self.recs[index]
         sent = sent.replace(' ', '')
-        if '。' in sent:
-            sent = sent[sent.index('。') + 1:]
         sent_dct = self.tokenizer(sent, return_tensors='pt',
                                   max_length=self.length,
                                   padding='max_length',
                                   add_special_tokens=True,
                                   truncation=True)
         # print(sent_dct)
-        return (sent_dct['input_ids'], sent_dct['token_type_ids'], sent_dct['attention_mask'])
+        return (sent_dct['input_ids'], sent_dct['token_type_ids'],
+                sent_dct['attention_mask'])
 
 
 if __name__ == '__main__':
-    news_ds = GPT2NewsDataset('../data/pig/grey.json', 50)
+    news_ds = GPT2NewsDataset('../data/all.json', 50)
     print(news_ds[5])
