@@ -1,7 +1,12 @@
+import sys
+
 import pytorch_lightning as pl
-import torch.optim as optim
 import torch
+import torch.optim as optim
 from transformers import GPT2LMHeadModel
+from utils import KeywordsLoss
+
+sys.path.append("..")
 
 
 class GPT2Trainer(pl.LightningModule):
@@ -10,6 +15,9 @@ class GPT2Trainer(pl.LightningModule):
         self.save_hyperparameters()
         self.gpt2 = GPT2LMHeadModel.from_pretrained(
             'ckiplab/gpt2-base-chinese')
+        if args['with_keywords_loss']:
+            self.loss_fct2 = KeywordsLoss(
+                alpha=args['keywords_loss_alpha'], loss_fct=args['keywords_loss_fct'])
 
     def generate(self, inputs_ids, attn_mask, **kwargs):
         inputs_ids = inputs_ids.to(self.device)
@@ -27,12 +35,15 @@ class GPT2Trainer(pl.LightningModule):
 
     def training_step(self, inputs, batch_idx):
         # inputs = {key: torch.stack(val) for key, val in inputs.items()}
-        outputs = self.gpt2(input_ids=inputs[0].squeeze(1),
-                            token_type_ids=inputs[1].squeeze(1),
-                            attention_mask=inputs[2].squeeze(1),
-                            labels=inputs[0].squeeze(1))
-
-        return {'loss': outputs[0]}
+        ret = self.gpt2(input_ids=inputs[0].squeeze(1),
+                        token_type_ids=inputs[1].squeeze(1),
+                        attention_mask=inputs[2].squeeze(1),
+                        labels=inputs[0].squeeze(1))
+        loss2 = self.loss_fct2(ret.logits, inputs[0].squeeze(
+            1)) if self.hparams['with_keywords_loss'] else 0.
+        self.log('keyword_loss', loss2, prog_bar=True)
+        self.log('lm_loss', ret.loss, prog_bar=True)
+        return {'loss': ret.loss + loss2}
 
     def training_epoch_end(self, outputs):
         log = {'mean_loss': torch.stack(
@@ -47,4 +58,8 @@ class GPT2Trainer(pl.LightningModule):
     @staticmethod
     def add_parser_args(parser):
         parser.add_argument('--lr', type=float)
+
+        # parser.add_argument('--with_keywords_loss', action='store_true')
+        # parser.add_argument('--keywords_loss_alpha', type=float, default=0.7, help='float > 0.5')
+        # parser.add_argument('--keywords_loss_fct', type=str, default='kldiv', help='kldiv or mse')
         return parser

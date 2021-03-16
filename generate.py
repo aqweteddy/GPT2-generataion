@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 from typing import List
 import torch
 from tqdm import tqdm
-from transformers import BertTokenizerFast
+from transformers import BertTokenizerFast, GPT2LMHeadModel
 
 from bert2bert import BERT2BERTTrainer
 from gpt2 import GPT2Trainer, GPT2LMHeadWithCalibration
@@ -19,7 +19,7 @@ class Generator:
     def __init__(self, ckpt, model_type, device='cuda'):
         self.model_type = model_type
         if model_type == 'gpt2':
-            self.model = GPT2Trainer.load_from_checkpoint(ckpt).to(device)
+            self.model = GPT2LMHeadModel.from_pretrained(ckpt).to(device)
         elif 'bert2bert' in model_type:
             self.model = BERT2BERTTrainer.load_from_checkpoint(ckpt).to(device)
         elif model_type == 'rag':
@@ -45,10 +45,10 @@ class Generator:
                                          eos_token=102,
                                          num_beams=10,
                                          num_return_sequences=num_seq,
-                                         repetition_penalty=1.3,
+                                         repetition_penalty=1.6,
                                          temperature=kwargs.pop('temperature', 1.5),
                                          do_sample=True,
-                                         no_repeat_ngram_size=4,
+                                         no_repeat_ngram_size=3,
                                          **kwargs
                                          )
 

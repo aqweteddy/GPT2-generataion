@@ -1,15 +1,18 @@
-import pytorch_lightning as pl
-import torch.optim as optim
-import torch
-from transformers import BertGenerationEncoder, BertGenerationDecoder, EncoderDecoderModel
+import sys
 
-from bert2bert.model import KeywordsLoss
+import pytorch_lightning as pl
+import torch
+import torch.optim as optim
+from transformers import (BertGenerationDecoder, BertGenerationEncoder,
+                          EncoderDecoderModel)
+sys.path.append("..")
+from utils import KeywordsLoss
+
 
 class BERT2BERTTrainer(pl.LightningModule):
     def __init__(self, lr, **args):
         super(BERT2BERTTrainer, self).__init__()
         self.save_hyperparameters()
-
         encoder = BertGenerationEncoder.from_pretrained("ckiplab/bert-base-chinese",
                                                         bos_token_id=101,
                                                         eos_token_id=102,
@@ -23,7 +26,8 @@ class BERT2BERTTrainer(pl.LightningModule):
 
         self.bert2bert = EncoderDecoderModel(encoder=encoder, decoder=decoder)
         if args['with_keywords_loss']:
-            self.loss_fct2 = KeywordsLoss(alpha=args['keywords_loss_alpha'], loss_fct=args['keywords_loss_fct'])
+            self.loss_fct2 = KeywordsLoss(
+                alpha=args['keywords_loss_alpha'], loss_fct=args['keywords_loss_fct'])
 
     def generate(self, inputs_ids, attention_mask=None, **kwargs):
         inputs_ids = inputs_ids.to(self.device)
@@ -49,12 +53,13 @@ class BERT2BERTTrainer(pl.LightningModule):
         body['input_ids'] = body['input_ids'].squeeze(1)
         body['attention_mask'] = body['attention_mask'].squeeze(1)
         ret = self.bert2bert(input_ids=title['input_ids'],
-                              attention_mask=title['attention_mask'],
-                              decoder_input_ids=body['input_ids'],
-                              decoder_attention_mask=body['attention_mask'],
-                              labels=body['input_ids']
-                              )
-        loss2 = self.loss_fct2(ret.logits, title['input_ids']) if self.hparams['with_keywords_loss'] else 0.
+                             attention_mask=title['attention_mask'],
+                             decoder_input_ids=body['input_ids'],
+                             decoder_attention_mask=body['attention_mask'],
+                             labels=body['input_ids']
+                             )
+        loss2 = self.loss_fct2(
+            ret.logits, title['input_ids']) if self.hparams['with_keywords_loss'] else 0.
         self.log('keyword_loss', loss2, prog_bar=True)
         self.log('clm_loss', ret.loss, prog_bar=True)
 
@@ -73,7 +78,9 @@ class BERT2BERTTrainer(pl.LightningModule):
     def add_parser_args(parser):
         # parser.add_argument('--lr', type=float)
         parser.add_argument('--with_keywords_loss', action='store_true')
-        parser.add_argument('--keywords_loss_alpha', type=float, default=0.7, help='float > 0.5')
-        parser.add_argument('--keywords_loss_fct', type=str, default='kldiv', help='kldiv or mse')
+        parser.add_argument('--keywords_loss_alpha',
+                            type=float, default=0.7, help='float > 0.5')
+        parser.add_argument('--keywords_loss_fct', type=str,
+                            default='kldiv', help='kldiv or mse')
 
         return parser

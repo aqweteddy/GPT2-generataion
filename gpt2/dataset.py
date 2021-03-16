@@ -1,6 +1,6 @@
 from torch.utils import data
 from transformers import BertTokenizerFast
-import json
+import json, re
 
 
 class GPT2NewsDataset(data.Dataset):
@@ -17,8 +17,14 @@ class GPT2NewsDataset(data.Dataset):
         with open(file) as f:
             data = json.load(f)
         body = []
+        chinese = '[\u4e00-\u9fa5]+'
+
         for d in data:
-            body.extend(d['title'] + b for b in d['body'])
+            d['title'] = re.findall(chinese, d['title'])
+            d['title'] = ''.join(d['title'])
+            if len(d['title']) > 5:
+                b = ''.join(d['body'])
+                body.extend([d['title'] + ':' + b])
         return body
 
     def __getitem__(self, index: int):
